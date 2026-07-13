@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23050508' stroke='%23C9A84C' stroke-width='4'/><text x='50' y='70' font-size='60' font-weight='bold' text-anchor='middle' fill='%23C9A84C'>B</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Repository | Brandon T. Malaba</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Barlow+Condensed:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void:#050508;
+            --gold:#C9A84C;
+            --gold-dim:#a8782a;
+            --gold-pale:#eddfa0;
+            --silver:#d8e0eb;
+            --mist:#7a8fa8;
+            --parchment:#f7f2e9;
+            --glass-gold:rgba(201,168,76,0.14);
+            --glass-border:rgba(201,168,76,0.22);
+            --glass-border-bright:rgba(201,168,76,0.55);
+            --glass-card:rgba(8,12,28,0.55);
+            --glass-card-hover:rgba(12,18,38,0.70);
+            --font-serif:'EB Garamond',serif;
+            --font-cond:'Barlow Condensed',sans-serif;
+        }
+
+        *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+        html { scroll-behavior:smooth; }
+        body {
+            font-family:var(--font-cond);
+            background:var(--void);
+            color:var(--silver);
+            min-height:100vh;
+            overflow-x:hidden;
+        }
+
+        /* FIXED BACKGROUND */
+        body::before {
+            content:'';
+            position:fixed;
+            inset:0;
+            background:linear-gradient(rgba(5,5,8,0.72),rgba(5,5,8,0.72)),
+                        url('law_office_background.jpg') center center/cover no-repeat;
+            z-index:0;
+            pointer-events:none;
+        }
+
+        /* ATMOSPHERIC OVERLAY — golden glow + subtle grid lines */
+        body::after {
+            content:'';
+            position:fixed;
+            inset:0;
+            background:
+                radial-gradient(ellipse 100% 50% at 50% 0%,rgba(201,168,76,0.16) 0%,transparent 58%),
+                radial-gradient(ellipse 60% 80% at 0% 100%,rgba(201,168,76,0.08) 0%,transparent 50%),
+                repeating-linear-gradient(180deg,transparent,transparent 60px,rgba(201,168,76,0.02) 60px,rgba(201,168,76,0.02) 61px);
+            z-index:0;
+            pointer-events:none;
+        }
+
+        /* ═══════════════════════════════
+           NAV
+        ═══════════════════════════════ */
+        nav {
+            position:fixed;
+            top:0; left:0; right:0;
+            z-index:500;
+            padding:0 56px;
+            height:72px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            background:rgba(5,5,8,0.6);
+            backdrop-filter:blur(28px) saturate(160%);
+            -webkit-backdrop-filter:blur(28px) saturate(160%);
+            border-bottom:1px solid var(--glass-border);
+        }
+
+        .nav-seal {
+            display:flex;
+            align-items:center;
+            gap:14px;
+            text-decoration:none;
+            flex-shrink:0;
+        }
+        .nav-seal-icon {
+            width:38px; height:38px;
+            border:1px solid var(--glass-border-bright);
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-family:var(--font-serif);
+            font-size:1.1rem;
+            color:var(--gold);
+            background:rgba(201,168,76,0.06);
+            backdrop-filter:blur(10px);
+        }
+        .nav-seal-text {
+            font-size:0.7rem;
+            font-weight:600;
+            letter-spacing:4px;
+            text-transform:uppercase;
+            color:var(--silver);
+            opacity:0.85;
+        }
+        .nav-seal-text strong { color:var(--gold); font-weight:700; }
+
+        .nav-links {
+            display:flex;
+            gap:44px;
+            list-style:none;
+            align-items:center;
+        }
+        .nav-links a {
+            font-size:0.65rem;
+            font-weight:500;
+            letter-spacing:3px;
+            text-transform:uppercase;
+            color:var(--mist);
+            text-decoration:none;
+            transition:color 0.3s;
+            position:relative;
+        }
+        .nav-links a::after {
+            content:'';
+            position:absolute;
+            bottom:-4px; left:0;
+            width:0; height:1px;
+            background:var(--gold);
+            transition:width 0.3s ease;
+        }
+        .nav-links a:hover,
+        .nav-links a.active { color:var(--gold); }
+        .nav-links a.active::after,
+        .nav-links a:hover::after { width:100%; }
+
+        .nav-cta {
+            padding:9px 22px;
+            border:1px solid var(--glass-border-bright) !important;
+            color:var(--gold) !important;
+            font-size:0.6rem !important;
+            font-weight:600 !important;
+            letter-spacing:2.5px !important;
+            border-radius:2px;
+            transition:background 0.3s, box-shadow 0.3s !important;
+            background:rgba(201,168,76,0.05) !important;
+            backdrop-filter:blur(10px);
+        }
+        .nav-cta:hover {
+            background:rgba(201,168,76,0.15) !important;
+            box-shadow:0 0 20px rgba(201,168,76,0.15) !important;
+        }
+        .nav-cta::after { display:none !important; }
+
+        /* HAMBURGER — mobile only */
+        .nav-hamburger {
+            display:none;
+            flex-direction:column;
+            gap:5px;
+            cursor:pointer;
+            padding:8px;
+            background:none;
+            border:none;
+        }
+        .nav-hamburger span {
+            display:block;
+            width:22px;
+            height:1.5px;
+            background:var(--gold);
+            transition:0.3s;
+        }
+
+        /* MOBILE DRAWER */
+        .nav-drawer {
+            display:none;
+            position:fixed;
+            top:72px; left:0; right:0;
+            background:rgba(5,5,8,0.95);
+            backdrop-filter:blur(28px) saturate(160%);
+            -webkit-backdrop-filter:blur(28px) saturate(160%);
+            border-bottom:1px solid var(--glass-border);
+            z-index:499;
+            padding:24px 32px;
+            flex-direction:column;
+            gap:20px;
+        }
+        .nav-drawer.open { display:flex; }
+        .nav-drawer a {
+            font-size:0.75rem;
+            font-weight:500;
+            letter-spacing:3px;
+            text-transform:uppercase;
+            color:var(--mist);
+            text-decoration:none;
+            padding:10px 0;
+            border-bottom:1px solid var(--glass-border);
+            transition:color 0.3s;
+        }
+        .nav-drawer a:hover,
+        .nav-drawer a.active { color:var(--gold); }
+        .nav-drawer a:last-child { border-bottom:none; }
+
+        /* ═══════════════════════════════
+           PAGE HERO
+        ═══════════════════════════════ */
+        .page-hero {
+            position:relative;
+            z-index:1;
+            padding:150px 56px 56px;
+            text-align:center;
+            animation:fade-up 0.8s 0.2s both;
+        }
+        .page-hero-eyebrow {
+            font-size:0.6rem;
+            font-weight:400;
+            letter-spacing:6px;
+            text-transform:uppercase;
+            color:var(--gold);
+            opacity:0.7;
+            margin-bottom:18px;
+            display:block;
+        }
+        .page-hero h1 {
+            font-family:var(--font-serif);
+            font-size:clamp(2.8rem,7vw,5.5rem);
+            font-weight:400;
+            line-height:1;
+            color:var(--parchment);
+        }
+        .page-hero h1 em {
+            font-style:italic;
+            color:var(--gold);
+        }
+        .page-hero-rule {
+            width:50px; height:1px;
+            background:linear-gradient(90deg,transparent,var(--gold),transparent);
+            margin:24px auto;
+        }
+        .page-hero-sub {
+            font-size:0.68rem;
+            font-weight:300;
+            letter-spacing:3.5px;
+            text-transform:uppercase;
+            color:var(--mist);
+        }
+
+        /* ═══════════════════════════════
+           FILTER TABS
+        ═══════════════════════════════ */
+        .filter-wrap {
+            position:relative;
+            z-index:1;
+            max-width:1360px;
+            margin:0 auto;
+            padding:0 56px;
+            animation:fade-up 0.8s 0.3s both;
+        }
+
+        .filter-bar {
+            display:flex;
+            gap:0;
+            overflow-x:auto;
+            scrollbar-width:none;
+            border-bottom:1px solid var(--glass-border);
+            margin-bottom:48px;
+        }
+        .filter-bar::-webkit-scrollbar { display:none; }
+
+        .filter-tab {
+            padding:16px 24px;
+            font-size:0.62rem;
+            font-weight:600;
+            letter-spacing:2.5px;
+            text-transform:uppercase;
+            color:var(--mist);
+            cursor:pointer;
+            border:none;
+            background:transparent;
+            border-bottom:2px solid transparent;
+            transition:0.3s;
+            white-space:nowrap;
+            margin-bottom:-1px;
+            font-family:var(--font-cond);
+        }
+        .filter-tab:hover { color:var(--gold); }
+        .filter-tab.active {
+            color:var(--gold);
+            border-bottom-color:var(--gold);
+        }
+
+        .results-label {
+            font-size:0.55rem;
+            letter-spacing:3px;
+            text-transform:uppercase;
+            color:var(--mist);
+            opacity:0.4;
+            margin-bottom:28px;
+        }
+
+        /* ═══════════════════════════════
+           SECTION WRAPPER
+        ═══════════════════════════════ */
+        .repo-section {
+            position:relative;
+            z-index:1;
+            max-width:1360px;
+            margin:0 auto;
+            padding:0 56px 72px;
+        }
+        .repo-section.hidden-section { display:none; }
+
+        .section-header {
+            display:flex;
+            align-items:center;
+            gap:20px;
+            padding-bottom:20px;
+            border-bottom:1px solid var(--glass-border);
+            margin-bottom:32px;
+        }
+        .section-type-badge {
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:6px 16px;
+            background:rgba(201,168,76,0.08);
+            backdrop-filter:blur(12px);
+            border:1px solid var(--glass-border-bright);
+            border-radius:2px;
+            font-size:0.58rem;
+            font-weight:700;
+            letter-spacing:3px;
+            text-transform:uppercase;
+            color:var(--gold);
+            flex-shrink:0;
+        }
+        .section-type-badge.bundle {
+            color:var(--silver);
+            border-color:rgba(203,213,225,0.25);
+            background:rgba(203,213,225,0.05);
+        }
+        .section-heading {
+            font-family:var(--font-serif);
+            font-size:1.8rem;
+            font-weight:400;
+            color:var(--parchment);
+            line-height:1.1;
+        }
+        .section-count {
+            margin-left:auto;
+            font-size:0.55rem;
+            font-weight:400;
+            letter-spacing:2px;
+            text-transform:uppercase;
+            color:var(--mist);
+            opacity:0.4;
+            flex-shrink:0;
+        }
+
+        /* ═══════════════════════════════
+           BRIEF CARDS — GLASSMORPHISM
+        ═══════════════════════════════ */
+        .briefs-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+            gap:16px;
+        }
+
+        .brief-card {
+            position:relative;
+            display:flex;
+            flex-direction:column;
+            /* Deep glass layer */
+            background:var(--glass-card);
+            backdrop-filter:blur(32px) saturate(160%) brightness(1.05);
+            -webkit-backdrop-filter:blur(32px) saturate(160%) brightness(1.05);
+            border:1px solid var(--glass-border);
+            border-radius:3px;
+            padding:32px 28px;
+            overflow:hidden;
+            transition:transform 0.4s cubic-bezier(0.23,1,0.32,1),
+                        border-color 0.3s,
+                        box-shadow 0.4s,
+                        background 0.3s;
+        }
+
+        /* Top shimmer line */
+        .brief-card::before {
+            content:'';
+            position:absolute;
+            top:0; left:0; right:0;
+            height:1px;
+            background:linear-gradient(90deg,transparent,rgba(201,168,76,0.6),transparent);
+            opacity:0;
+            transition:opacity 0.4s;
+        }
+
+        /* Inner frost glow */
+        .brief-card::after {
+            content:'';
+            position:absolute;
+            inset:0;
+            background:radial-gradient(ellipse at 50% -20%,rgba(201,168,76,0.09) 0%,transparent 65%);
+            opacity:0;
+            transition:opacity 0.4s;
+            pointer-events:none;
+        }
+
+        .brief-card:hover {
+            transform:translateY(-6px);
+            border-color:rgba(201,168,76,0.45);
+            background:var(--glass-card-hover);
+            box-shadow:
+                0 24px 60px rgba(0,0,0,0.7),
+                0 0 0 1px rgba(201,168,76,0.12),
+                inset 0 1px 0 rgba(201,168,76,0.15);
+        }
+        .brief-card:hover::before,
+        .brief-card:hover::after { opacity:1; }
+
+        @media (hover:none) {
+            .brief-card:hover { transform:none; }
+            .brief-card:active { border-color:rgba(201,168,76,0.45); }
+        }
+
+        .brief-card.wide { grid-column:1/-1; }
+
+        .card-court {
+            font-size:0.55rem;
+            font-weight:700;
+            letter-spacing:3px;
+            text-transform:uppercase;
+            color:var(--gold);
+            opacity:0.75;
+            margin-bottom:14px;
+            display:block;
+        }
+        .card-title {
+            font-family:var(--font-serif);
+            font-size:1.35rem;
+            font-weight:400;
+            color:var(--parchment);
+            line-height:1.25;
+            margin-bottom:14px;
+            transition:color 0.3s;
+        }
+        .brief-card:hover .card-title { color:#fff; }
+
+        .card-analysis-label {
+            font-size:0.55rem;
+            font-weight:600;
+            letter-spacing:2.5px;
+            text-transform:uppercase;
+            color:var(--gold);
+            opacity:0.5;
+            margin-bottom:8px;
+        }
+        .card-snippet {
+            font-size:0.8rem;
+            font-weight:300;
+            line-height:1.75;
+            color:var(--silver);
+            opacity:0.8;
+            flex:1;
+            margin-bottom:22px;
+        }
+        .card-snippet strong { color:var(--parchment); font-weight:500; }
+
+        .card-principles {
+            display:flex;
+            flex-wrap:wrap;
+            gap:6px;
+            margin-bottom:22px;
+        }
+        .principle-chip {
+            padding:4px 10px;
+            font-size:0.52rem;
+            font-weight:400;
+            letter-spacing:1.5px;
+            text-transform:uppercase;
+            color:var(--mist);
+            border:1px solid rgba(201,168,76,0.18);
+            border-radius:2px;
+            background:rgba(201,168,76,0.04);
+            backdrop-filter:blur(8px);
+            transition:border-color 0.3s, color 0.3s;
+        }
+        .brief-card:hover .principle-chip {
+            border-color:rgba(201,168,76,0.28);
+            color:rgba(216,224,235,0.9);
+        }
+
+        .card-link {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:11px 16px;
+            background:rgba(201,168,76,0.06);
+            backdrop-filter:blur(10px);
+            border:1px solid var(--glass-border-bright);
+            border-radius:2px;
+            font-size:0.6rem;
+            font-weight:600;
+            letter-spacing:2px;
+            text-transform:uppercase;
+            color:var(--gold);
+            cursor:pointer;
+            width:100%;
+            font-family:var(--font-cond);
+            transition:background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+        .card-link:hover {
+            background:rgba(201,168,76,0.14);
+            border-color:var(--gold);
+            box-shadow:0 0 16px rgba(201,168,76,0.12);
+        }
+        .card-link span { transition:transform 0.3s; }
+        .card-link:hover span { transform:translateX(4px); }
+
+        /* Wide card layout */
+        .wide-inner {
+            display:flex;
+            gap:40px;
+            align-items:flex-start;
+        }
+        .wide-inner .wide-content { flex:1; }
+        .wide-inner .wide-action {
+            display:flex;
+            flex-direction:column;
+            justify-content:flex-end;
+            min-width:200px;
+            align-self:flex-end;
+        }
+
+        /* ═══════════════════════════════
+           BUNDLE CARDS — GLASSMORPHISM
+        ═══════════════════════════════ */
+        .bundles-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fill,minmax(440px,1fr));
+            gap:16px;
+        }
+
+        .bundle-card {
+            position:relative;
+            display:flex;
+            gap:28px;
+            background:rgba(203,213,225,0.04);
+            backdrop-filter:blur(32px) saturate(150%);
+            -webkit-backdrop-filter:blur(32px) saturate(150%);
+            border:1px solid rgba(203,213,225,0.12);
+            border-radius:3px;
+            padding:32px 28px;
+            overflow:hidden;
+            transition:transform 0.4s cubic-bezier(0.23,1,0.32,1),
+                        border-color 0.3s,
+                        background 0.3s,
+                        box-shadow 0.4s;
+        }
+        .bundle-card::before {
+            content:'';
+            position:absolute;
+            top:0; left:0; right:0;
+            height:1px;
+            background:linear-gradient(90deg,transparent,rgba(203,213,225,0.35),transparent);
+            opacity:0;
+            transition:opacity 0.3s;
+        }
+        .bundle-card::after {
+            content:'';
+            position:absolute;
+            inset:0;
+            background:radial-gradient(ellipse at 50% -20%,rgba(203,213,225,0.05) 0%,transparent 65%);
+            opacity:0;
+            transition:opacity 0.4s;
+            pointer-events:none;
+        }
+        .bundle-card:hover {
+            transform:translateY(-6px);
+            border-color:rgba(203,213,225,0.28);
+            background:rgba(203,213,225,0.07);
+            box-shadow:0 24px 60px rgba(0,0,0,0.65),inset 0 1px 0 rgba(203,213,225,0.1);
+        }
+        .bundle-card:hover::before,
+        .bundle-card:hover::after { opacity:1; }
+
+        .bundle-icon {
+            width:52px; height:52px;
+            background:rgba(203,213,225,0.05);
+            backdrop-filter:blur(12px);
+            border:1px solid rgba(203,213,225,0.15);
+            border-radius:3px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:1.4rem;
+            flex-shrink:0;
+            color:var(--silver);
+        }
+        .bundle-body {
+            flex:1;
+            display:flex;
+            flex-direction:column;
+        }
+        .bundle-court {
+            font-size:0.55rem;
+            font-weight:700;
+            letter-spacing:3px;
+            text-transform:uppercase;
+            color:var(--silver);
+            opacity:0.4;
+            margin-bottom:10px;
+        }
+        .bundle-title {
+            font-family:var(--font-serif);
+            font-size:1.3rem;
+            font-weight:400;
+            color:var(--parchment);
+            line-height:1.2;
+            margin-bottom:12px;
+            transition:color 0.3s;
+        }
+        .bundle-card:hover .bundle-title { color:#fff; }
+        .bundle-desc {
+            font-size:0.78rem;
+            font-weight:300;
+            line-height:1.7;
+            color:var(--silver);
+            opacity:0.6;
+            margin-bottom:16px;
+            flex:1;
+        }
+        .bundle-docs {
+            display:flex;
+            flex-direction:column;
+            gap:5px;
+            margin-bottom:18px;
+        }
+        .bundle-doc-item {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            font-size:0.65rem;
+            color:var(--mist);
+            letter-spacing:0.5px;
+        }
+        .bundle-doc-item::before {
+            content:'◆';
+            font-size:0.35rem;
+            color:var(--silver);
+            opacity:0.25;
+            flex-shrink:0;
+        }
+        .bundle-link {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:10px 16px;
+            background:rgba(203,213,225,0.04);
+            backdrop-filter:blur(10px);
+            border:1px solid rgba(203,213,225,0.18);
+            border-radius:2px;
+            font-size:0.58rem;
+            font-weight:600;
+            letter-spacing:2px;
+            text-transform:uppercase;
+            color:var(--silver);
+            cursor:pointer;
+            width:100%;
+            font-family:var(--font-cond);
+            transition:background 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+        .bundle-link:hover {
+            background:rgba(203,213,225,0.09);
+            border-color:rgba(203,213,225,0.38);
+            color:#fff;
+            box-shadow:0 0 16px rgba(203,213,225,0.06);
+        }
+        .bundle-link span { transition:transform 0.3s; }
+        .bundle-link:hover span { transform:translateX(4px); }
+
+        /* HIDDEN for filter */
+        .brief-card.hidden,
+        .bundle-card.hidden { display:none; }
+
+        /* ═══════════════════════════════
+           TICKER
+        ═══════════════════════════════ */
+        .ticker-wrap {
+            position:relative;
+            z-index:1;
+            overflow:hidden;
+            padding:18px 0;
+            background:rgba(8,10,20,0.7);
+            backdrop-filter:blur(20px);
+            -webkit-backdrop-filter:blur(20px);
+            border-top:1px solid var(--glass-border);
+            border-bottom:1px solid var(--glass-border);
+        }
+        .ticker-wrap::before,
+        .ticker-wrap::after {
+            content:'';
+            position:absolute;
+            top:0; bottom:0;
+            width:120px;
+            z-index:2;
+            pointer-events:none;
+        }
+        .ticker-wrap::before { left:0; background:linear-gradient(90deg,rgba(8,10,20,0.9),transparent); }
+        .ticker-wrap::after  { right:0; background:linear-gradient(-90deg,rgba(8,10,20,0.9),transparent); }
+        .ticker-move {
+            display:flex;
+            white-space:nowrap;
+            width:max-content;
+            animation:ticker 60s linear infinite;
+        }
+        @media (prefers-reduced-motion:reduce) { .ticker-move { animation:none; } }
+        .ticker-item {
+            padding:0 72px;
+            font-size:0.62rem;
+            font-weight:300;
+            letter-spacing:4px;
+            text-transform:uppercase;
+            color:var(--mist);
+        }
+        .ticker-item em { color:var(--gold); font-style:normal; font-weight:600; }
+        .ticker-diamond { color:var(--gold); opacity:0.35; font-size:0.5rem; }
+        @keyframes ticker { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+
+        /* ═══════════════════════════════
+           FOOTER
+        ═══════════════════════════════ */
+        footer {
+            position:relative;
+            z-index:1;
+            padding:36px 56px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            background:rgba(5,5,8,0.75);
+            backdrop-filter:blur(20px);
+            -webkit-backdrop-filter:blur(20px);
+            border-top:1px solid var(--glass-border);
+            flex-wrap:wrap;
+            gap:16px;
+        }
+        .footer-brand {
+            font-family:var(--font-serif);
+            font-size:1rem;
+            font-weight:400;
+            letter-spacing:3px;
+            color:var(--mist);
+            font-style:italic;
+            text-decoration:none;
+            transition:color 0.3s;
+        }
+        .footer-brand:hover { color:var(--gold); }
+        .footer-brand strong { color:var(--gold); font-weight:600; font-style:normal; }
+        .footer-copy {
+            font-size:0.58rem;
+            font-weight:300;
+            letter-spacing:2.5px;
+            text-transform:uppercase;
+            color:var(--mist);
+            opacity:0.35;
+        }
+        .footer-links {
+            display:flex;
+            gap:28px;
+            list-style:none;
+        }
+        .footer-links a {
+            font-size:0.58rem;
+            letter-spacing:2px;
+            text-transform:uppercase;
+            color:var(--mist);
+            text-decoration:none;
+            opacity:0.35;
+            transition:opacity 0.3s, color 0.3s;
+        }
+        .footer-links a:hover { opacity:1; color:var(--gold); }
+
+        /* ═══════════════════════════════
+           PDF MODAL
+        ═══════════════════════════════ */
+        .pdf-modal {
+            display:none;
+            position:fixed;
+            inset:0;
+            z-index:9000;
+            background:rgba(5,5,8,0.94);
+            backdrop-filter:blur(20px) saturate(150%);
+            -webkit-backdrop-filter:blur(20px) saturate(150%);
+            flex-direction:column;
+        }
+        .pdf-modal.open { display:flex; }
+        .pdf-toolbar {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:16px 32px;
+            background:rgba(5,5,8,0.85);
+            backdrop-filter:blur(20px);
+            border-bottom:1px solid var(--glass-border);
+            flex-shrink:0;
+        }
+        .pdf-title {
+            font-family:var(--font-serif);
+            font-size:0.85rem;
+            letter-spacing:2px;
+            color:var(--gold);
+            font-style:italic;
+        }
+        .pdf-toolbar-actions { display:flex; gap:10px; align-items:center; }
+        .pdf-close {
+            background:rgba(201,168,76,0.05);
+            backdrop-filter:blur(10px);
+            border:1px solid var(--glass-border);
+            color:var(--mist);
+            padding:8px 18px;
+            font-size:0.58rem;
+            letter-spacing:2px;
+            text-transform:uppercase;
+            cursor:pointer;
+            border-radius:2px;
+            transition:border-color 0.3s, color 0.3s, background 0.3s;
+            font-family:var(--font-cond);
+        }
+        .pdf-close:hover { border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,0.1); }
+        .pdf-download {
+            background:rgba(201,168,76,0.08);
+            backdrop-filter:blur(10px);
+            border:1px solid var(--glass-border-bright);
+            color:var(--gold);
+            padding:8px 18px;
+            font-size:0.58rem;
+            letter-spacing:2px;
+            text-transform:uppercase;
+            cursor:pointer;
+            border-radius:2px;
+            text-decoration:none;
+            font-family:var(--font-cond);
+            transition:background 0.3s, box-shadow 0.3s;
+        }
+        .pdf-download:hover { background:rgba(201,168,76,0.15); box-shadow:0 0 16px rgba(201,168,76,0.12); }
+        .pdf-frame { flex:1; border:none; width:100%; }
+
+        /* ═══════════════════════════════
+           ANIMATIONS
+        ═══════════════════════════════ */
+        @keyframes fade-up {
+            from { opacity:0; transform:translateY(22px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+        .briefs-grid  { animation:fade-up 0.9s 0.4s both; }
+        .bundles-grid { animation:fade-up 0.9s 0.5s both; }
+
+        /* ═══════════════════════════════
+           RESPONSIVE
+        ═══════════════════════════════ */
+        @media (max-width:1024px) {
+            nav { padding:0 32px; }
+            .repo-section,
+            .filter-wrap { padding-left:32px; padding-right:32px; }
+            .page-hero { padding:130px 32px 48px; }
+            footer { padding:28px 32px; }
+        }
+
+        @media (max-width:900px) {
+            .briefs-grid,
+            .bundles-grid { grid-template-columns:1fr; }
+            .wide-inner { flex-direction:column; }
+            .wide-inner .wide-action { align-self:stretch; min-width:unset; }
+            .bundle-card { flex-direction:column; }
+            .bundle-icon { width:44px; height:44px; }
+        }
+
+        @media (max-width:768px) {
+            .nav-links { display:none; }
+            .nav-hamburger { display:flex; }
+            nav { padding:0 24px; }
+            .repo-section,
+            .filter-wrap { padding-left:20px; padding-right:20px; }
+            .page-hero { padding:110px 20px 40px; }
+            footer { flex-direction:column; text-align:center; padding:24px 20px; }
+            .footer-links { justify-content:center; }
+        }
+
+        @media (max-width:480px) {
+            .brief-card,
+            .bundle-card { padding:24px 18px; }
+            .filter-tab { padding:14px 16px; font-size:0.58rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══ NAV ═══ -->
+    <nav>
+        <a href="index.html" class="nav-seal">
+            <div class="nav-seal-icon">B</div>
+            <span class="nav-seal-text"><strong>B.T.</strong> Malaba</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="cv.html">Profile</a></li>
+            <li><a href="articles.html" class="active">Repository</a></li>
+            <li><a href="contact.html" class="nav-cta">Instruct</a></li>
+        </ul>
+        <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <!-- MOBILE DRAWER -->
+    <div class="nav-drawer" id="navDrawer">
+        <a href="index.html">Home</a>
+        <a href="cv.html">Profile</a>
+        <a href="articles.html" class="active">Repository</a>
+        <a href="contact.html">Instruct</a>
+    </div>
+
+    <!-- ═══ HERO ═══ -->
+    <div class="page-hero">
+        <span class="page-hero-eyebrow">Substantive jurisprudence · Procedural drafting · South African law</span>
+        <h1>Legal <em>Portfolio</em></h1>
+        <div class="page-hero-rule"></div>
+        <p class="page-hero-sub">SCA Case Analyses &nbsp;·&nbsp; High Court Bundles &nbsp;·&nbsp; Magistrate's Court Files</p>
+    </div>
+
+    <!-- ═══ FILTER TABS ═══ -->
+    <div class="filter-wrap">
+        <div class="filter-bar" role="tablist">
+            <button class="filter-tab active" data-filter="all" role="tab">All Work</button>
+            <button class="filter-tab" data-filter="sca" role="tab">SCA</button>
+            <button class="filter-tab" data-filter="tax" role="tab">Tax Law</button>
+            <button class="filter-tab" data-filter="constitutional" role="tab">Constitutional</button>
+            <button class="filter-tab" data-filter="company" role="tab">Company Law</button>
+            <button class="filter-tab" data-filter="property" role="tab">Property</button>
+            <button class="filter-tab" data-filter="high-court" role="tab">High Court</button>
+            <button class="filter-tab" data-filter="magistrate" role="tab">Magistrate's Court</button>
+        </div>
+        <div class="results-label" id="resultsLabel">Showing 9 items</div>
+    </div>
+
+    <!-- ═══ SECTION I — SCA BRIEFS ═══ -->
+    <section class="repo-section" id="sectionBriefs">
+        <div class="section-header">
+            <span class="section-type-badge">◆ &nbsp; Case Briefs</span>
+            <h2 class="section-heading">SCA Jurisprudence Analyses</h2>
+            <span class="section-count" id="briefCount">7 briefs</span>
+        </div>
+
+        <div class="briefs-grid" id="briefsGrid">
+
+            <article class="brief-card" data-tags="sca administrative">
+                <span class="card-court">SCA · Administrative Law &amp; Procurement</span>
+                <h3 class="card-title">Mabunda v RAF: The Death of Administrative Self-Help</h3>
+                <p class="card-analysis-label">Strategic Analysis</p>
+                <p class="card-snippet">Analysis of the <em>Oudekraal</em> principle and the SCA's rebuke of the RAF's attempt to unilaterally terminate panel attorney contracts without court int[...]
+                <div class="card-principles">
+                    <span class="principle-chip">Oudekraal Principle</span>
+                    <span class="principle-chip">Administrative Self-Help</span>
+                    <span class="principle-chip">Panel Attorneys</span>
+                    <span class="principle-chip">PAJA s.6</span>
+                </div>
+                <button class="card-link" onclick="openPDF('Documents/Mabunda_RAF_Brief.pdf','Mabunda v RAF — Case Analysis')">Access Case Brief <span>→</span></button>
+            </article>
+
+            <article class="brief-card" data-tags="sca trust">
+                <span class="card-court">SCA · Trust &amp; Appellate Jurisprudence</span>
+                <h3 class="card-title">Janse De Wit v De Wit NO: Trust Sanctity Brief</h3>
+                <p class="card-analysis-label">Strategic Analysis</p>
+                <p class="card-snippet">Deconstruction of Section 13 of the Trust Property Control Act — the high jurisdictional threshold for judicial interference in testamentary freedom. Whe[...]
+                <div class="card-principles">
+                    <span class="principle-chip">Trust Property Control Act s.13</span>
+                    <span class="principle-chip">Testamentary Freedom</span>
+                    <span class="principle-chip">Beneficiary Rights</span>
+                </div>
+                <button class="card-link" onclick="openPDF('Documents/JanseDeWit_CaseNote.pdf','Janse De Wit v De Wit NO — Case Analysis')">Access Case Brief <span>→</span></button>
+            </article>
+
+            <article class="brief-card" data-tags="sca tax">
+                <span class="card-court">SCA · Tax &amp; Administrative Law</span>
+                <h3 class="card-title">CSARS v Erasmus: Challenging Irregular Steps</h3>
+                <p class="card-analysis-label">Strategic Analysis</p>
+                <p class="card-snippet">Deconstruction of TAA Rule 31 and ITA Section 80J — the limits of the Commissioner's power to amend GAAR assessments mid-litigation. Procedural disciplin[...]
+                <div class="card-principles">
+                    <span class="principle-chip">TAA Rule 31</span>
+                    <span class="principle-chip">ITA s.80J</span>
+                    <span class="principle-chip">GAAR</span>
+                    <span class="principle-chip">SARS Powers</span>
+                </div>
+                <button class="card-link" onclick="openPDF('Documents/CSARS_v_Erasmus_CaseNote.pdf','CSARS v Erasmus — Case Analysis')">Access Case Brief <span>→</span></button>
+            </article>
+
+            <article class="brief-card" data-tags="sca company">
+                <span class="card-court">SCA · Company Law &amp; Business Rescue</span>
+                <h3 class="card-title">AATIF v Vienings: Defining Recklessness</h3>
+                <p class="card-analysis-label">Strategic Analysis</p>
+                <p class="card-snippet">Analysis of the SCA's reasoning on business rescue practitioner liability — the bounds of recklessness in director decision-making. Implications for corpo[...]
+                <div class="card-principles">
+                    <span class="principle-chip">Business Rescue</span>
+                    <span class="principle-chip">BRP Liability</span>
+                    <span class="principle-chip">Recklessness Test</span>
+                </div>
+                <button class="card-link" onclick="openPDF('Documents/AATIF_v_Vienings_CaseNote.pdf','AATIF v Vienings — Case Analysis')">Access Case Brief <span>→</span></button>
+            </article>
+
+            <article class="brief-card" data-tags="sca property">
+                <span class="card-court">SCA · Property Law &amp; Succession</span>
+                <h3 class="card-title">Baseline Civil Contractors: Boundary Line Disputes</h3>
+                <p class="card-analysis-label">Strategic Analysis</p>
+                <p class="card-snippet">SCA reasoning on property boundary disputes — evidentiary standards, reliance on surveys, and the presumption of accuracy. Critical for practitioners dea[...]
+                <div class="card-principles">
+                    <span class="principle-chip">Boundary Disputes</span>
+                    <span class="principle-chip">Property Rights</span>
+                    <span class="principle-chip">Survey Evidence</span>
+                    <span class="principle-chip">Registrar Powers</span>
+                </div>
+                <button class="card-link" onclick="openPDF('Documents/Baseline_Civil_Contractors_CaseNote.pdf','Baseline Civil Contractors — Case Analysis')">Access Case Brief <span>→</span></button>
+            </article>
+
+            <article class="brief-card" data-tags="sca constitutional">
+                <span class="card-court">SCA · Constitutional &amp; Delict Law</span>
+                <h3 class="card-title">Zincede Ngokwakho: Dignity, Defamation &amp; Damages</h3>
+                <p class="card-analysis-label">Strategic Analysis</p>
+                <p class="card-snippet">Intersection of constitutional dignity rights and the law of defamation. Analysis of damages principles in reputational harm litigation — quantifying[...]
+                <div class="card-principles">
+                    <span class="principle-chip">Constitutional Rights</span>
+                    <span class="principle-chip">Defamation</span>
+                    <span class="principle-chip">Damages Principles</span>
+                    <span class="principle-chip">Dignity Protection</span>
+                </div>
+                <button class="card-link" onclick="openPDF('Documents/Zincede_Ngokwakho_CaseNote.pdf','Zincede Ngokwakho — Case Analysis')">Access Case Brief <span>→</span></button>
+            </article>
+
+            <article class="brief-card" data-tags="high-court delict">
+                <span class="card-court">High Court · Delict &amp; Procedural Law</span>
+                <h3 class="card-title">Ncala v Van Heerden: Product Liability Brief</h3>
+                <p class="card-analysis-label">Strategic Analysis</p>
+                <p class="card-snippet">High Court judgment analyzing product liability principles — the duty of care owed by manufacturers, warnings obligations, and causation in defective[...]
+                <div class="card-principles">
+                    <span class="principle-chip">Product Liability</span>
+                    <span class="principle-chip">Duty of Care</span>
+                    <span class="principle-chip">Causation</span>
+                    <span class="principle-chip">Warnings & Labelling</span>
+                </div>
+                <button class="card-link" onclick="openPDF('Documents/Ncala_VanHeerden_Brief.pdf','Ncala v Van Heerden — Case Analysis')">Access Case Brief <span>→</span></button>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- ═══ SECTION II — COURT BUNDLES ═══ -->
+    <section class="repo-section" id="sectionBundles">
+        <div class="section-header">
+            <span class="section-type-badge bundle">◆ &nbsp; Court Bundles</span>
+            <h2 class="section-heading">Litigation Bundles — Discovery &amp; Argument</h2>
+            <span class="section-count" id="bundleCount">2 bundles</span>
+        </div>
+
+        <div class="bundles-grid" id="bundlesGrid">
+
+            <article class="bundle-card" data-tags="high-court">
+                <div class="bundle-icon">📋</div>
+                <div class="bundle-body">
+                    <span class="bundle-court">High Court of South Africa &nbsp;·&nbsp; Johannesburg</span>
+                    <h3 class="bundle-title">Makhanya v Litigation Syndicate</h3>
+                    <p class="bundle-desc">Complete litigation discovery and argument bundle from complex commercial dispute — demonstrating pleadings architecture, documentary evidence organization, and procedural positioning.</p>
+                    <div class="bundle-docs">
+                        <span class="bundle-doc-item">Pleadings & Affidavits</span>
+                        <span class="bundle-doc-item">Documentary Discovery</span>
+                        <span class="bundle-doc-item">Heads of Argument</span>
+                    </div>
+                    <button class="bundle-link" onclick="openPDF('Documents/Makhanya_Litigation_Bundle.pdf','Makhanya v Litigation Syndicate — Full Bundle')">Access Bundle <span>→</span></button>
+                </div>
+            </article>
+
+            <article class="bundle-card" data-tags="magistrate">
+                <div class="bundle-icon">⚖</div>
+                <div class="bundle-body">
+                    <span class="bundle-court">Magistrate's Court &nbsp;·&nbsp; Johannesburg Region</span>
+                    <h3 class="bundle-title">Jacobs Defence Bundle</h3>
+                    <p class="bundle-desc">Defence-side litigation bundle from magistrate's court criminal proceedings — organized evidence, procedural filings, and argumentation strategy for effective client representation.</p>
+                    <div class="bundle-docs">
+                        <span class="bundle-doc-item">Defence Affidavits & Statements</span>
+                        <span class="bundle-doc-item">Procedural Applications</span>
+                        <span class="bundle-doc-item">Cross-Examination Notes</span>
+                    </div>
+                    <button class="bundle-link" onclick="openPDF('Documents/Jacobs_Defense_Bundle.pdf','Jacobs Defence Bundle — Full Bundle')">Access Bundle <span>→</span></button>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- ═══ TICKER ═══ -->
+    <div class="ticker-wrap">
+        <div class="ticker-move">
+            <span class="ticker-item"><em>Audi alteram partem</em> &nbsp;<span class="ticker-diamond">◆</span>&nbsp; Hear the other side</span>
+            <span class="ticker-item"><em>Fiat justitia ruat caelum</em> &nbsp;<span class="ticker-diamond">◆</span>&nbsp; Let justice be done</span>
+            <span class="ticker-item"><em>Nemo iudex in causa sua</em> &nbsp;<span class="ticker-diamond">◆</span>&nbsp; No man a judge in his own cause</span>
+            <span class="ticker-item"><em>Ubi jus ibi remedium</em> &nbsp;<span class="ticker-diamond">◆</span>&nbsp; Where there is a right, there is a remedy</span>
+            <span class="ticker-item"><em>Pacta sunt servanda</em> &nbsp;<span class="ticker-diamond">◆</span>&nbsp; Agreements must be kept</span>
+            <span class="ticker-item"><em>Audi alteram partem</em> &nbsp;<span class="ticker-diamond">◆</span>&nbsp; Hear the other side</span>
+            <span class="ticker-item"><em>Fiat justitia ruat caelum</em> &nbsp;<span class="ticker-diamond">◆</span>&nbsp; Let justice be done</span>
+            <span class="ticker-item"><em>Nemo iudex in causa sua</em> &nbsp;<span class="ticker-diamond">◆</span>&nbsp; No man a judge in his own cause</span>
+            <span class="ticker-item"><em>Ubi jus ibi remedium</em> &nbsp;<span class="ticker-diamond">◆</span>&nbsp; Where there is a right, there is a remedy</span>
+            <span class="ticker-item"><em>Pacta sunt servanda</em> &nbsp;<span class="ticker-diamond">◆</span>&nbsp; Agreements must be kept</span>
+        </div>
+    </div>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer>
+        <a href="index.html" class="footer-brand"><strong>Brandon T.</strong> Malaba</a>
+        <p class="footer-copy">&copy; 2026 &nbsp;·&nbsp; LLB (UFS) &nbsp;·&nbsp; All rights reserved</p>
+        <ul class="footer-links">
+            <li><a href="https://www.linkedin.com/in/brandon-malaba-7099a7a7/" target="_blank">LinkedIn</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="articles.html">Repository</a></li>
+        </ul>
+    </footer>
+
+    <!-- ═══ PDF MODAL ═══ -->
+    <div class="pdf-modal" id="pdfModal">
+        <div class="pdf-toolbar">
+            <span class="pdf-title" id="pdfTitle">Document</span>
+            <div class="pdf-toolbar-actions">
+<!-- Download button removed to favor container view -->
+                <button class="pdf-close" onclick="closePDF()">✕ Close</button>
+            </div>
+        </div>
+        <iframe class="pdf-frame" id="pdfFrame" src=""></iframe>
+    </div>
+
+    <script>
+        // ═════════════════════════════════════════════════════════════════════════════════════
+        // PDF MODAL FUNCTIONS
+        // ═════════════════════════════════════════════════════════════════════════════════════
+        function openPDF(url, title) {
+            document.getElementById('pdfTitle').textContent = title;
+            document.getElementById('pdfFrame').src = url;
+// Download logic removed
+            document.getElementById('pdfModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePDF() {
+            document.getElementById('pdfModal').classList.remove('open');
+            document.getElementById('pdfFrame').src = '';
+            document.body.style.overflow = '';
+        }
+
+        // Close modal when clicking outside the modal box
+        document.getElementById('pdfModal').addEventListener('click', function(e) {
+            if (e.target === this) closePDF();
+        });
+
+        // ═════════════════════════════════════════════════════════════════════════════════════
+        // FILTER LOGIC
+        // ═════════════════════════════════════════════════════════════════════════════════════
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const briefCards = document.querySelectorAll('.brief-card');
+        const bundleCards = document.querySelectorAll('.bundle-card');
+
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                filterTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                const filter = this.getAttribute('data-filter');
+                let visibleCount = 0;
+
+                briefCards.forEach(card => {
+                    const tags = card.getAttribute('data-tags').split(' ');
+                    if (filter === 'all' || tags.includes(filter)) {
+                        card.classList.remove('hidden');
+                        visibleCount++;
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+
+                bundleCards.forEach(card => {
+                    const tags = card.getAttribute('data-tags').split(' ');
+                    if (filter === 'all' || tags.includes(filter)) {
+                        card.classList.remove('hidden');
+                        visibleCount++;
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+
+                document.getElementById('resultsLabel').textContent = `Showing ${visibleCount} item${visibleCount !== 1 ? 's' : ''}`;
+            });
+        });
+
+        // ═════════════════════════════════════════════════════════════════════════════════════
+        // MOBILE HAMBURGER MENU
+        // ═════════════════════════════════════════════════════════════════════════════════════
+        const hamburger = document.getElementById('hamburger');
+        const navDrawer = document.getElementById('navDrawer');
+
+        hamburger.addEventListener('click', function() {
+            navDrawer.classList.toggle('open');
+        });
+
+        // Close drawer when a link is clicked
+        const drawerLinks = navDrawer.querySelectorAll('a');
+        drawerLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navDrawer.classList.remove('open');
+            });
+        });
+    </script>
+
+</body>
+</html>
